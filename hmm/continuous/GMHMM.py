@@ -26,7 +26,9 @@ class GMHMM(_ContinuousHMM):
         Gaussian PDF function
         '''
         covar_det = numpy.linalg.det(covar);
-
+        # print covar_det
+        # print ( (2.0*numpy.pi)**(float(self.d/2.0)) * (covar_det)**(0.5))
         c = (1 / ( (2.0*numpy.pi)**(float(self.d/2.0)) * (covar_det)**(0.5)))
         pdfval = c * numpy.exp(-0.5 * numpy.dot( numpy.dot((x-mean),covar.I), (x-mean)) )
+
         return pdfval

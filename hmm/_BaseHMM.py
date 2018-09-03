@@ -179,6 +179,7 @@ class _BaseHMM(object):
                     numer *= self.A[i][j]
                     numer *= self.B_map[j][t+1]
                     numer *= beta[t+1][j]
+                    print(numer, denom)
                     xi[t][i][j] = numer/denom
 
         return xi
@@ -218,7 +219,7 @@ class _BaseHMM(object):
             prob_old, prob_new = self.trainiter(observations)
 
             if (self.verbose):
-                print ("iter: ", i, ", L(model|O) =", prob_old, ", L(model_new|O) =", prob_new, ", converging =", ( prob_new-prob_old > thres ))
+                print(("iter: ", i, ", L(model|O) =", prob_old, ", L(model_new|O) =", prob_new, ", converging =", ( prob_new-prob_old > thres )))
 
             if ( abs(prob_new-prob_old) < epsilon ):
                 # converged

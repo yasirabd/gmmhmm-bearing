@@ -6,6 +6,11 @@ Created on Nov 12, 2012
 
 from hmm._BaseHMM import _BaseHMM
 import numpy
+import logging
+import sys
+
+# to replace 0: avoid log(0) = -inf. -Inf + p(d) makes useless the effect of  p(d)
+MINIMAL_PROB = sys.float_info.min
 
 class _ContinuousHMM(_BaseHMM):
     '''
@@ -86,7 +91,13 @@ class _ContinuousHMM(_BaseHMM):
         self.Bmix_map = numpy.zeros( (self.n,self.m,len(observations)), dtype=self.precision)
         for j in range(self.n):
             for t in range(len(observations)):
-                self.B_map[j][t] = self._calcbjt(j, t, observations[t])
+                lik = self._calcbjt(j, t, observations[t])
+                if lik == 0:
+                    logging.warning("obs likelihood at time {} for state {} = 0. Repair by adding {}".format(t,j,
+                    ))
+                    lik = MINIMAL_PROB
+                self.B_map[j][t] = lik
+                # self.B_map[j][t] = self._calcbjt(j, t, observations[t])
 
     """
     b[j][Ot] = sum(1...M)w[j][m]*b[j][m][Ot]
